@@ -15,25 +15,18 @@ const Stories = () => {
       const [shorttoggle, setshortToggle] = useState(true)
 
       const [recent, setRecent] = useState([])
-      console.log(recent);
+
+      const [old, setOld] = useState([])
+
 
 
       const handle = () => {
             setToggle(previousState => !previousState)
             if (longtoggle) {
-                  const longres = stories.filter(s => {
-                        return s?.type === 'short'
-                  })
-                  setData(longres)
                   setLonglen(0)
-
             }
             else {
-                  const shortres = stories.filter(s => {
-                        return s?.type === 'long'
-                  })
-                  setData(shortres)
-                  setLonglen(0)
+                  setLonglen(4)
             }
 
       }
@@ -42,20 +35,12 @@ const Stories = () => {
       const handleShort = () => {
             setshortToggle(previousState => !previousState)
             if (shorttoggle) {
-                  const longres = stories.filter(s => {
-                        return s?.type === 'long'
-                  })
-                  setData(longres)
                   setshortShortlen(0)
-
             }
             else {
-                  const shortres = stories.filter(s => {
-                        return s?.type === 'short'
-                  })
-                  setData(shortres)
-                  setshortShortlen(0)
+                  setshortShortlen(2)
             }
+
       }
 
       const deleteAll = () => {
@@ -63,8 +48,14 @@ const Stories = () => {
       }
 
       useEffect(() => {
-            const recent = stories.filter(storie => storie?.datetime.slice(0, 4) < '2022')
+            const recent = stories.filter(storie => storie?.datetime.slice(0, 4) === '2022')
             setRecent(recent)
+      }, [])
+
+      useEffect(() => {
+            console.log('old');
+            const old = stories.filter(storie => storie?.datetime.slice(0, 4) < '2022')
+            setOld(old)
       }, [])
 
 
@@ -72,41 +63,68 @@ const Stories = () => {
             <>
                   <Navbar toggle={longtoggle} setToggle={setToggle} handle={handle} handleShort={handleShort} longlen={longlen} deleteAll={deleteAll} shortlen={shortlen} ></Navbar>
 
-
+                  <h1 style={{ color: 'white', textAlign: 'start', margin: '50px' }}>Recent</h1>
                   <div style={{ backgroundColor: 'black', display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gridGap: '10px', justifyItems: 'center', alignItems: 'center' }}>
-
-
                         {
-                              data.map(storie => (
-                                    <div key={storie?.id} style={{ width: '606px', height: '220px', backgroundColor: '#242526', display: 'flex', alignItems: 'center', marginTop: '50px' }}>
+                              recent.map(storie => (
+
+                                    longtoggle && (storie?.type === 'long') ?
+
+                                          < div style={{ width: '606px', height: '220px', backgroundColor: '#242526', display: 'flex', alignItems: 'center', marginTop: '50px' }} >
+                                                <div>
+                                                      <h3 style={{ color: '#4392f1' }}>{storie?.title}</h3>
+                                                      <p style={{ color: 'white' }}>{storie?.body}</p>
+                                                      <p style={{ color: '#bcb8b1' }}>{storie?.datetime}</p>
+
+                                                </div>
+                                                <div>
+                                                      <img style={{ width: '100px', height: '90px' }} src={storie?.image} alt="" />
+                                                </div>
+                                          </div>
+                                          :
+                                          shorttoggle && storie?.type === 'short' &&
+                                          < div style={{ width: '606px', height: '220px', backgroundColor: '#242526', marginTop: '50px' }} >
+                                                <div>
+                                                      <p style={{ color: 'white' }}>{storie?.body}</p>
+                                                      <p style={{ color: '#bcb8b1' }}>{storie?.datetime}</p>
+
+                                                </div>
+                                          </div>
 
 
-                                          {
-                                                longtoggle && (storie?.type === 'long') ?
 
-                                                      < div style={{ width: '606px', height: '220px', backgroundColor: '#242526', display: 'flex', alignItems: 'center', marginTop: '50px' }} >
-                                                            <div>
-                                                                  <h3 style={{ color: '#4392f1' }}>{storie?.title}</h3>
-                                                                  <p style={{ color: 'white' }}>{storie?.body}</p>
-                                                                  <p style={{ color: '#bcb8b1' }}>{storie?.datetime}</p>
+                              ))
+                        }
+                  </div>
 
-                                                            </div>
-                                                            <div>
-                                                                  <img style={{ width: '100px', height: '90px' }} src={storie?.image} alt="" />
-                                                            </div>
-                                                      </div>
-                                                      :
-                                                      shorttoggle && storie?.type === 'short' &&
-                                                      < div style={{ width: '606px', height: '220px', backgroundColor: '#242526', marginTop: '50px' }} >
-                                                            <div>
-                                                                  <p style={{ color: 'white' }}>{storie?.body}</p>
-                                                                  <p style={{ color: '#bcb8b1' }}>{storie?.datetime}</p>
+                  <h1 style={{ color: 'white', textAlign: 'start', margin: '50px' }}>Old</h1>
+                  <div style={{ backgroundColor: 'black', display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gridGap: '10px', justifyItems: 'center', alignItems: 'center' }}>
+                        {
+                              old.map(storie => (
 
-                                                            </div>
-                                                      </div>
-                                          }
+                                    longtoggle && (storie?.type === 'long') ?
 
-                                    </div>
+                                          < div style={{ width: '606px', height: '220px', backgroundColor: '#242526', display: 'flex', alignItems: 'center', marginTop: '50px' }} >
+                                                <div>
+                                                      <h3 style={{ color: '#4392f1' }}>{storie?.title}</h3>
+                                                      <p style={{ color: 'white' }}>{storie?.body}</p>
+                                                      <p style={{ color: '#bcb8b1' }}>{storie?.datetime}</p>
+
+                                                </div>
+                                                <div>
+                                                      <img style={{ width: '100px', height: '90px' }} src={storie?.image} alt="" />
+                                                </div>
+                                          </div>
+                                          :
+                                          shorttoggle && storie?.type === 'short' &&
+                                          < div style={{ width: '606px', height: '220px', backgroundColor: '#242526', marginTop: '50px' }} >
+                                                <div>
+                                                      <p style={{ color: 'white' }}>{storie?.body}</p>
+                                                      <p style={{ color: '#bcb8b1' }}>{storie?.datetime}</p>
+
+                                                </div>
+                                          </div>
+
                               ))
                         }
                   </div>
